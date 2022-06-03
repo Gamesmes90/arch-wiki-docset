@@ -1,0 +1,17 @@
+{
+    "name": "Arch-Wiki",
+    "package": "arch-wiki",
+    "extra": {
+        "indexFilePath": "arch-wiki/html/en/Main_page.html"
+    },
+    "selectors": {
+        "dt a": "Command",
+        "title": "Package"
+    },
+    "ignore": [
+        "ABOUT"
+    ],
+    "icon32x32": "icon@2x.png",
+    "allowJS": false,
+    "ExternalURL": "https://wiki.archlinux.org/"
+}
