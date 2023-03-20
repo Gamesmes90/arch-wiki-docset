@@ -7,6 +7,18 @@ zeal_arg="0"
 skip="0"
 docset_folder="arch-wiki.docset"
 
+filter (){ # Read the filter and filter out the folders
+  while IFS= read -r line; do
+    if [[ $line =~ ^#.* ]]; then
+      continue
+    elif [ ! -d "$srcdir/arch-wiki/html/$line" ]; then
+      echo "Error: $line is not a directory!"
+    fi
+    rm -R -f $srcdir/arch-wiki/html/$line
+  done < "filter.cfg"
+}
+
+
 clean () { # Removes building directory and script directory
   rm -R -f $srcdir
   rm -R -f $scriptdir
@@ -110,6 +122,39 @@ while [[ $# -gt 0 ]]; do
     -c|--clean) # remove folders
       shift
       clean
+      exit 0
+      ;;
+    -b|--build) # build only
+      cp ./meta.json $srcdir/dashing.json
+      cd docset_build
+      dashing build arch-wiki
+      cp ../icon.png $docset_folder
+      cp ../icon@2x.png $docset_folder
+      mv dashing.json $docset_folder/meta.json
+      if [ $? -eq 0 ]; then
+          echo "Docset generated!"
+      else
+          echo "Error, Return Value: $?"
+          exit 1
+      fi
+      shift
+      exit 0
+      ;;
+    -l|--filter)
+      filter # filter out folders
+      shift
+      exit 0
+      ;;
+    -i|--install) # install only
+      cd docset_build
+      cp -R $docset_folder ~/.local/share/Zeal/Zeal/docsets/
+      if [ $? -eq 0 ]; then
+        echo "Docset Installed!"
+      else
+        echo "Error, Return Value: $?"
+        exit 1
+      fi
+      shift
       exit 0
       ;;
     -*|--*)

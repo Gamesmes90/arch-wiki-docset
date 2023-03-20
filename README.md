@@ -129,3 +129,31 @@ to then copy ```arch-wiki``` inside it when you need it
 This will save you some space.
 
 Keeping the files would make it easier to update the wiki (check [updating section](#updating)).
+
+### Build only
+To only build the wiki do
+```
+./arch-wiki-docset.sh -b
+```
+or
+```
+./arch-wiki-docset.sh --build
+```
+### Install only
+To only install the docset do
+```
+./arch-wiki-docset.sh -i
+```
+or
+```
+./arch-wiki-docset.sh --install
+```
+### Language filter
+arch-wiki-docs will always download all languages, so this script has a language filter. To make it work just uncomment the lines of the languages you wish to remove in [filter.cfg](./filter.cfg) and then do
+```
+./arch-wiki-docset.sh -l
+```
+or
+```
+./arch-wiki-docset.sh --filter
+```
