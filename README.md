@@ -3,12 +3,7 @@ Script to generate pages from Arch Wiki in docset format (tested with [zeal](htt
 
 **Note**: Building may take a long time.
 
-You can download pre built pages from the [releases page](https://github.com/Gamesmes90/arch-wiki-docset/releases) (usually it's not up-to-date)
-You can also find the ```info.plist``` file and the ```docSet.dsidx``` file there.
-
 Check [Installation](#manual-installation) for manual instructions.
-
-All [releases tags](https://github.com/Gamesmes90/arch-wiki-docset/releases) are in Day/Month/Year format
 
 ## Contents
 - [Dependencies](#dependencies)
@@ -37,21 +32,37 @@ or run with ```bash``` command
 
 
 ## Usage
-##### To build the docset run
-```bash
-./arch-wiki-docset.sh
-```
 
-##### Remove folders after building with
+Download build and install with
 ```bash
-./arch-wiki-docset.sh -cr
+./arch-wiki-docset.sh -d -b -i
 ```
 or
 ```bash
-./arch-wiki-docset.sh --clear
+./arch-wiki-docset.sh --download --build --install
+```
+this can be used to update the docset as well
+
+### Commands
+##### Download wiki
+```bash
+./arch-wiki-docset.sh -d
+```
+or
+```bash
+./arch-wiki-docset.sh --download
 ```
 
-##### Remove folders with
+##### Build docset
+```bash
+./arch-wiki-docset.sh -b
+```
+or
+```bash
+./arch-wiki-docset.sh --build
+```
+
+##### Remove build folders
 ```bash
 ./arch-wiki-docset.sh -c
 ```
@@ -60,100 +71,48 @@ or
 ./arch-wiki-docset.sh --clean
 ```
 
-##### Installation (zeal)
+##### Install docset
 ```bash
-./arch-wiki-docset.sh -z
+./arch-wiki-docset.sh -i
 ```
 or
 ```bash
-./arch-wiki-docset.sh --zeal
+./arch-wiki-docset.sh --install
 ```
-You can skip building the docset by adding ```skip``` after ```-z``` or ```--zeal``` option.
 
-##### Manual installation
-
-Alternatively, you can manually move the folder to ```.local/share/Zeal/Zeal/docsets```.
-
-##### Download the arch wiki only
-```bash
-./arch-wiki-docset.sh -w
-```
-or
-```bash
-./arch-wiki-docset.sh --wiki
-```
-This will download files only if they are not up-to-date, it will also check and report if there are new files.
-
-### Updating
-
-If there aren't any new pages on the wiki, you can try to copy the ```arch-wiki``` folder inside ```arch-wiki.docset/Contents/Resources/Documents``` to avoid rebuilding the entire docset.
-
-You can do this with
+##### Uninstall docset
 ```bash
 ./arch-wiki-docset.sh -u
 ```
 or
 ```bash
-./arch-wiki-docset.sh --update
+./arch-wiki-docset.sh --uninstall
 ```
 
-Keeping track of the number of files inside the wiki folder could help finding new files.
-
-You can do this with
+##### Check for new files in wiki
 ```bash
-./arch-wiki-docset.sh -cf
+./arch-wiki-docset.sh -c
 ```
 or
 ```bash
 ./arch-wiki-docset.sh --checkFolder
 ```
+Note: The wiki has to be redownloaded to check if there are new files
 
-#### Extras
-To build the arch wiki for only the languages of your choice go inside ```arch-wiki/html``` and delete the folders of the languages you don't care about. (This might save some time during building). 
-
-Keep in mind that the download script will download all languages anyway, the current commit has a [language filter]() but it doesn't seem to be working at this time.
-
-You can keep a copy of the ```arch-wiki``` folder found inside ```docset_build``` and delete the other directories
-
-You can create the ```docset_build``` folder only with
+##### Redownload arch-wiki-docs
 ```bash
-./arch-wiki-docset.sh -f
+./arch-wiki-docset.sh -r
 ```
 or
 ```bash
-./arch-wiki-docset.sh --folder
+./arch-wiki-docset.sh --redownload
 ```
 
-to then copy ```arch-wiki``` inside it when you need it
-
-This will save you some space.
-
-Keeping the files would make it easier to update the wiki (check [updating section](#updating)).
-
-### Build only
-To only build the wiki do
-```
-./arch-wiki-docset.sh -b
+##### Help
+```bash
+./arch-wiki-docset.sh -h
 ```
 or
-```
-./arch-wiki-docset.sh --build
-```
-### Install only
-To only install the docset do
-```
-./arch-wiki-docset.sh -i
-```
-or
-```
-./arch-wiki-docset.sh --install
-```
-### Language filter
-arch-wiki-docs will always download all languages, so this script has a language filter. To make it work just uncomment the lines of the languages you wish to remove in [filter.cfg](./filter.cfg) and then do
-```
-./arch-wiki-docset.sh -l
-```
-or
-```
-./arch-wiki-docset.sh --filter
+```bash
+./arch-wiki-docset.sh --help
 ```

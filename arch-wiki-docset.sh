@@ -2,26 +2,68 @@
 
 srcdir="docset_build"
 scriptdir="arch-wiki-docs"
-clear_arg="0"
-zeal_arg="0"
-skip="0"
 docset_folder="arch-wiki.docset"
 
-filter (){ # Read the filter and filter out the folders
-  while IFS= read -r line; do
-    if [[ $line =~ ^#.* ]]; then
-      continue
-    elif [ ! -d "$srcdir/arch-wiki/html/$line" ]; then
-      echo "Error: $line is not a directory!"
-    fi
-    rm -R -f $srcdir/arch-wiki/html/$line
-  done < "filter.cfg"
+help () {
+  echo "Usage: arch-wiki-docset [options]
+
+    -d, --download [langs]      Download the wiki with specified languages (blank defaults to english) 
+    -i, --install               Install docset
+    -u, --uninstall             Uninstall docset
+    -c, --clean                 Remove docset_build folder
+    -b, --build                 Build docset
+    -c, --checkFolder           Check for new files
+    -r, --redownload            Redownload arch-wiki-docs
+    -h, --help                  Show this help message
+    "
+  echo "Examples:
+
+    arch-wiki-docset -d -b -i
+    Downloads the wiki, builds the docset, and installs it (en only), can be used to update the docset
+        
+    arch-wiki-docset -d en es -b -i
+    Downloads the wiki, builds the docset, and installs it (en and es), can be used to update the docset"
 }
 
+install () {
+  cd docset_build
+  cp -R $docset_folder ~/.local/share/Zeal/Zeal/docsets/
+  if [ $? -eq 0 ]; then
+    echo "Docset Installed!"
+  else
+    echo "Error, Return Value: $?"
+    exit 1
+  fi
+}
+
+build () {
+  cp ./meta.json $srcdir/dashing.json
+  cd docset_build
+  dashing build arch-wiki
+  cp ../icon.png $docset_folder
+  cp ../icon@2x.png $docset_folder
+  mv dashing.json $docset_folder/meta.json
+  if [ $? -eq 0 ]; then
+      echo "Docset generated!"
+  else
+      echo "Error, Return Value: $?"
+      exit 1
+  fi
+  cd ../
+}
+
+uninstall () {
+  rm -R -f ~/.local/share/Zeal/Zeal/docsets/$docset_folder
+  if [ $? -eq 0 ]; then
+    echo "Docset Uninstalled!"
+  else
+    echo "Error, Return Value: $?"
+    exit 1
+  fi
+}
 
 clean () { # Removes building directory and script directory
   rm -R -f $srcdir
-  rm -R -f $scriptdir
   rm file_num.txt
 }
 
@@ -54,107 +96,70 @@ checkWiki () { # Checks for new files
   fi
 }
 
+redownload () {
+  rm -R -f $scriptdir
+  git clone https://github.com/gamesmes90/arch-wiki-docs.git
+}
+
 downloadWiki () {
   if [ ! -d "$scriptdir" ]; then # Download script if it's not here
-    git clone https://github.com/lahwaacz/arch-wiki-docs.git
+    git clone https://github.com/gamesmes90/arch-wiki-docs.git
   fi
-
-  cd arch-wiki-docs
-  git checkout 216a2170262f5b1ee4af3ac9b565fd3be2752df9 # Stable commit
+  cd $srcdir
+  cd arch-wiki
+  #cd arch-wiki-docs
+  #git checkout 216a2170262f5b1ee4af3ac9b565fd3be2752df9 # Stable commit
+  if [ -z "$@" ]
+  then
+    python ../../arch-wiki-docs/arch-wiki-docs.py --output-directory ./html --safe-filenames --langs en
+  else
+    python ../../arch-wiki-docs/arch-wiki-docs.py --output-directory ./html --safe-filenames --langs $@
+  fi
   # Download the arch wiki
-  LANG=en_US.UTF-8 python \
-    arch-wiki-docs.py \
-    --output-directory "../$srcdir/arch-wiki/html" \
-    --clean \
-    --safe-filenames
+  cd ../../
 }
+
+var=$@
+if [ -z "$var" ]
+then  
+  help
+  exit 0
+fi
+
+mkdir -p "$srcdir/arch-wiki/html" # Create building directory structure
 
 while [[ $# -gt 0 ]]; do
   case $1 in
-    -cf|--checkFolder)
+    -c|--checkFolder)
       shift
       checkWiki # Check for new files
-
-      exit 0
       ;;
-    -u|--update) # Update html files
-      shift
-      if [ ! -d "$srcdir" ]; then # Check if srcdir is missing
-        echo "Error: docset_build directory missing!"
-        exit 1
-      fi
-      
-      cd $srcdir
-
-      cp -R arch-wiki $docset_folder/Contents/Resources/Documents
-
-      exit 0
-      ;;
-    -w|--wiki) # Update downloaded wiki
-      shift
-      if [ ! -d "$srcdir" ]; then # Check if srcdir is missing
-        echo "Error: docset_build directory missing!"
-        exit 1
-      fi
-
-      downloadWiki # Download the wiki
-
-      cd ..
-      checkWiki # Check for new files
-
-      exit 0
-      ;;
-    -f|--folder)
-      shift
-      mkdir $srcdir # create docset_build folder
-      exit 0
-      ;;
-    -z|--zeal)
-      zeal_arg=$1 # install into zeal
-      skip=$2 # skip building
-      shift
-      shift
-      ;;
-    -cr|--clear)
-      clear_arg=$1 # remove folders after building
+    -u|--uninstall) # uninstall docset
+      uninstall
       shift
       ;;
     -c|--clean) # remove folders
       shift
       clean
-      exit 0
       ;;
     -b|--build) # build only
-      cp ./meta.json $srcdir/dashing.json
-      cd docset_build
-      dashing build arch-wiki
-      cp ../icon.png $docset_folder
-      cp ../icon@2x.png $docset_folder
-      mv dashing.json $docset_folder/meta.json
-      if [ $? -eq 0 ]; then
-          echo "Docset generated!"
-      else
-          echo "Error, Return Value: $?"
-          exit 1
-      fi
+      build
       shift
-      exit 0
       ;;
-    -l|--filter)
-      filter # filter out folders
+    -d|--download) # download the wiki with specified languages (blank defaults to english)
       shift
-      exit 0
+      downloadWiki ${@%%-*} 
       ;;
-    -i|--install) # install only
-      cd docset_build
-      cp -R $docset_folder ~/.local/share/Zeal/Zeal/docsets/
-      if [ $? -eq 0 ]; then
-        echo "Docset Installed!"
-      else
-        echo "Error, Return Value: $?"
-        exit 1
-      fi
+    -i|--install) # install docset
+      install
       shift
+      ;;
+    -r|--redownload) # redownload arch-wiki-docs
+      redownload
+      shift
+      ;;
+    -h|--help)
+      help
       exit 0
       ;;
     -*|--*)
@@ -163,38 +168,3 @@ while [[ $# -gt 0 ]]; do
       ;;
   esac
 done
-
-mkdir -p "$srcdir/arch-wiki/html" # Create building directory structure
-
-cp meta.json $srcdir # Copy the json file
-mv $srcdir/meta.json $srcdir/dashing.json
-
-downloadWiki # Download the wiki
-
-cd ../docset_build
-
-if [ $skip != "skip" ]; then # skip building if -z/--zeal option has skip argument
-  dashing build arch-wiki
-fi
-
-cp ../icon.png $docset_folder
-cp ../icon@2x.png $docset_folder
-mv dashing.json $docset_folder/meta.json
-
-if [ $clear_arg = "-cr" ] || [ $clear_arg = "-clear" ]; then # clear if -cr/--clear option is detected
-  mv $docset_folder ../
-  cd ..
-  clean
-fi
-
-if [ $? -eq 0 ]; then
-    echo "Docset generated!"
-else
-    echo "Error, Return Value: $?"
-    exit 1
-fi
-
-if [ $zeal_arg = "-z" ] || [ $zeal_arg = "-zeal" ]; then # install into zeal if -z/--zeal option is detected
-  cp -R $docset_folder ~/.local/share/Zeal/Zeal/docsets/
-  echo "Docset Installed!"
-fi
