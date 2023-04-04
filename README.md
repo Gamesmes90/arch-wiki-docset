@@ -43,7 +43,7 @@ or
 ```
 this can be used to update the docset as well
 
-### Commands
+## Commands
 #### Download wiki
 ```bash
 ./arch-wiki-docset.sh -d
@@ -51,6 +51,20 @@ this can be used to update the docset as well
 or
 ```bash
 ./arch-wiki-docset.sh --download
+```
+Downloads english version of the wiki
+
+To download other languages, add the language code to the command
+```bash
+./arch-wiki-docset.sh -d [language code]
+```
+or
+```bash
+./arch-wiki-docset.sh --download [language code]
+```
+Example
+```bash
+./arch-wiki-docset.sh -d es it fr de
 ```
 
 #### Build docset
