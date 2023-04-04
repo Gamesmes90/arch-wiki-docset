@@ -44,7 +44,7 @@ or
 this can be used to update the docset as well
 
 ## Commands
-#### Download wiki
+### Download wiki
 ```bash
 ./arch-wiki-docset.sh -d
 ```
@@ -67,7 +67,7 @@ Example
 ./arch-wiki-docset.sh -d es it fr de
 ```
 
-#### Build docset
+### Build docset
 ```bash
 ./arch-wiki-docset.sh -b
 ```
@@ -76,7 +76,7 @@ or
 ./arch-wiki-docset.sh --build
 ```
 
-#### Remove build folders
+### Remove build folders
 ```bash
 ./arch-wiki-docset.sh -c
 ```
@@ -85,7 +85,7 @@ or
 ./arch-wiki-docset.sh --clean
 ```
 
-#### Install docset
+### Install docset
 ```bash
 ./arch-wiki-docset.sh -i
 ```
@@ -94,7 +94,7 @@ or
 ./arch-wiki-docset.sh --install
 ```
 
-#### Uninstall docset
+### Uninstall docset
 ```bash
 ./arch-wiki-docset.sh -u
 ```
@@ -103,7 +103,7 @@ or
 ./arch-wiki-docset.sh --uninstall
 ```
 
-#### Check for new files in wiki
+### Check for new files in wiki
 ```bash
 ./arch-wiki-docset.sh -c
 ```
@@ -113,7 +113,7 @@ or
 ```
 Note: The wiki has to be redownloaded to check if there are new files
 
-#### Redownload arch-wiki-docs
+### Redownload arch-wiki-docs
 ```bash
 ./arch-wiki-docset.sh -r
 ```
@@ -122,7 +122,7 @@ or
 ./arch-wiki-docset.sh --redownload
 ```
 
-#### Help
+### Help
 ```bash
 ./arch-wiki-docset.sh -h
 ```
