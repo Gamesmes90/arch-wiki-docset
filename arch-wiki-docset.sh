@@ -107,8 +107,7 @@ downloadWiki () {
   fi
   cd $srcdir
   cd arch-wiki
-  #cd arch-wiki-docs
-  #git checkout 216a2170262f5b1ee4af3ac9b565fd3be2752df9 # Stable commit
+
   if [ -z "$@" ]
   then
     python ../../arch-wiki-docs/arch-wiki-docs.py --output-directory ./html --safe-filenames --langs en
