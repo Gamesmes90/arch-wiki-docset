@@ -102,6 +102,8 @@ or
 ```bash
 ./arch-wiki-docset.sh --uninstall
 ```
+#### Note
+The script automatically fetches the docset location from zeal configuration file
 
 ### Check for new files in wiki
 ```bash

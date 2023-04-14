@@ -3,6 +3,7 @@
 srcdir="docset_build"
 scriptdir="arch-wiki-docs"
 docset_folder="arch-wiki.docset"
+docset_location=$(cat ~/.config/Zeal/Zeal.conf | grep path= | sed 's/path=//g')
 
 help () {
   echo "Usage: arch-wiki-docset [options]
@@ -27,7 +28,7 @@ help () {
 
 install () {
   cd docset_build
-  cp -R $docset_folder ~/.local/share/Zeal/Zeal/docsets/
+  cp -R $docset_folder $docset_location
   if [ $? -eq 0 ]; then
     echo "Docset Installed!"
   else
@@ -53,7 +54,7 @@ build () {
 }
 
 uninstall () {
-  rm -R -f ~/.local/share/Zeal/Zeal/docsets/$docset_folder
+  rm -R -f $docset_location/$docset_folder
   if [ $? -eq 0 ]; then
     echo "Docset Uninstalled!"
   else
