@@ -1,6 +1,7 @@
 {
     "name": "Arch-Wiki",
     "package": "arch-wiki",
+    "index": "arch-wiki/html/en/Main_page.html",
     "extra": {
         "indexFilePath": "arch-wiki/html/en/Main_page.html"
     },
