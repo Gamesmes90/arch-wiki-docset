@@ -4,6 +4,7 @@ srcdir="docset_build"
 scriptdir="arch-wiki-docs"
 docset_folder="arch-wiki.docset"
 docset_location=$(cat ~/.config/Zeal/Zeal.conf | grep path= | sed 's/path=//g')
+langs=("ar" "bs" "bg" "ca" "cs" "da" "de" "el" "en" "eo" "es" "fa" "fi" "fr" "he" "hr" "hu" "id" "it" "ja" "ko" "lt" "nb" "nl" "pl" "pt" "ro" "ru" "sk" "sr" "sv" "th" "tr" "uk" "vi" "yue" "zh-hans" "zh-hant") #38
 
 help () {
   echo "Usage: arch-wiki-docset [options]
@@ -15,6 +16,7 @@ help () {
     -b, --build                 Build docset
     -c, --checkFolder           Check for new files
     -r, --redownload            Redownload arch-wiki-docs
+    -p, --prefLang [lang]       Set preferred language for index page (default is english)
     -h, --help                  Show this help message
     "
   echo "Examples:
@@ -51,6 +53,19 @@ build () {
       exit 1
   fi
   cd ../
+}
+
+preferred_lang(){
+  if [ -z "$@" ]
+  then
+    echo "Error: No language specified"
+    exit 1
+  fi
+  if [[ ! " ${langs[*]} " =~ " ${@} " ]]; then
+      echo "Error: Invalid language code"
+      exit 1
+  fi
+  sed -i "s/en/$@/g" meta.json
 }
 
 uninstall () {
@@ -148,7 +163,7 @@ while [[ $# -gt 0 ]]; do
       ;;
     -d|--download) # download the wiki with specified languages (blank defaults to english)
       shift
-      downloadWiki ${@%%-*} 
+      downloadWiki $@ 
       ;;
     -i|--install) # install docset
       install
@@ -156,6 +171,15 @@ while [[ $# -gt 0 ]]; do
       ;;
     -r|--redownload) # redownload arch-wiki-docs
       redownload
+      shift
+      ;;
+    -p|--prefLang) # set preferred language for index page (default is english)
+      shift
+      if (($# > 1)); then
+        echo "Error: Too many arguments"
+        exit 1
+      fi
+      preferred_lang $@
       shift
       ;;
     -h|--help)

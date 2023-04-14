@@ -124,6 +124,18 @@ or
 ./arch-wiki-docset.sh --redownload
 ```
 
+### Select prefered index page language
+```bash
+./arch-wiki-docset.sh -p [language code]
+```
+or
+```bash
+./arch-wiki-docset.sh --prefLang [language code]
+```
+#### Note
+Use this before building the docset
+The script will automatically check if the language code is correct (supports all languages supported by arch-wiki-docs)
+
 ### Help
 ```bash
 ./arch-wiki-docset.sh -h
