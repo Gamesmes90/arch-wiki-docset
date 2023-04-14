@@ -113,7 +113,8 @@ or
 ```bash
 ./arch-wiki-docset.sh --checkFolder
 ```
-Note: The wiki has to be redownloaded to check if there are new files
+#### Note 
+The wiki has to be redownloaded to check if there are new files
 
 ### Redownload arch-wiki-docs
 ```bash
@@ -133,7 +134,8 @@ or
 ./arch-wiki-docset.sh --prefLang [language code]
 ```
 #### Note
-Use this before building the docset
+Use this before building the docset.
+
 The script will automatically check if the language code is correct (supports all languages supported by arch-wiki-docs)
 
 ### Help
