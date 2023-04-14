@@ -125,7 +125,7 @@ or
 ./arch-wiki-docset.sh --redownload
 ```
 
-### Select prefered index page language
+### Select preferred index page language
 ```bash
 ./arch-wiki-docset.sh -p [language code]
 ```
